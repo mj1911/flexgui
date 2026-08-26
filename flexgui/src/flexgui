@@ -368,8 +368,7 @@ class flexgui(QMainWindow):
 		startup.setup_actions(self) # setup actions adds to child names
 		startup.setup_enables(self) # menus must run before setup enables
 		startup.update_check(self)
-		startup.bind_flex_plotter(self)
-		startup.setup_plot(self)
+		startup.setup_plotter(self)
 		startup.setup_buttons(self)
 		startup.setup_status_labels(self)
 		startup.setup_list_widgets(self)
@@ -413,6 +412,7 @@ class flexgui(QMainWindow):
 		self.tool_edit_process = QProcess()
 		self.tool_edit_process.finished.connect(partial(actions.action_reload_tool_table, self))
 
+		# setup user timer
 		self.user_timer = QTimer()
 		startup.setup_import(self) # do this after user timer is created
 
