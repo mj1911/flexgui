@@ -312,14 +312,13 @@ def update_start_line(parent):
 def nc_code_changed(parent):
 	parent.file_changed = True
 	update_controls(parent)
-	'''
+
 	if 'save_pb' in parent.child_names:
 		if hasattr(parent.save_pb, 'state'):
 			parent.save_pb.state = True
 	if 'save_as_pb' in parent.child_names:
 		if hasattr(parent.save_as_pb, 'state'):
 			parent.save_as_pb.state = True
-	'''
 
 def read_dir(parent): # touch screen file navigator
 	if os.path.isdir(parent.nc_code_dir):
