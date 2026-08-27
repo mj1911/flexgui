@@ -140,7 +140,7 @@ def update(parent):
 			if parent.status.task_mode == emc.MODE_MDI:
 				utilities.update_mdi(parent)
 			parent.command.mode(emc.MODE_MANUAL)
-	
+
 		parent.state = parent.status.state
 
 	# **** TASK MODE ****
@@ -153,10 +153,14 @@ def update(parent):
 			parent.task_mode_lb.setText(TASK_MODES[parent.status.task_mode])
 
 		if 'run_pb' in parent.child_names and hasattr(parent.run_pb, 'state'):
-			if parent.task_mode == 'MODE_AUTO' or parent.task_mode == 'MODE_MDI':
+			print('yes')
+			if (parent.status.task_mode == emc.MODE_AUTO or
+					parent.status.task_mode == emc.MODE_MDI):
 				parent.run_pb.state = True
-			elif parent.task_mode == 'MODE_MANUAL':
+				print('green')
+			elif parent.status.task_mode == emc.MODE_MANUAL:
 				parent.run_pb.state = False
+				print('red')
 
 		# this is needed for MDI commands that do not use motion
 		if (parent.status.interp_state == emc.INTERP_IDLE
