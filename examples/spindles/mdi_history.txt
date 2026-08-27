@@ -1,0 +1,4 @@
+(debug, here)
+#1 = 10
+
+(debug, value is #1)
