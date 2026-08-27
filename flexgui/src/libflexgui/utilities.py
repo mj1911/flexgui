@@ -292,13 +292,6 @@ def max_velocity(parent,value):
 		parent.max_vel_lb.setText(f'{value} {parent.units}/min')
 
 def update_qcode_pte(parent):
-	'''
-	if parent.gcode_pte.isReadOnly():
-		parent.gcode_pte.setStyleSheet("background-color: #E0E0E0;")
-	else:
-		parent.gcode_pte.setStyleSheet("background-color: #FFFFFF;")
-	'''
-
 	extraSelections = []
 	selection = QTextEdit.ExtraSelection()
 	#line_color = QColor('yellow').lighter(160)
