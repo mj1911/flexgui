@@ -711,6 +711,9 @@ def update_controls(parent):
 					for item in parent.resume_controls:
 						getattr(parent, item).setEnabled(False)
 
+			if state == emc.RCS_ERROR:
+				parent.command.mode(emc.MODE_MANUAL)
+
 		elif task_mode == emc.MODE_MANUAL:
 			if all_homed:
 				for item in parent.probe_enable:
