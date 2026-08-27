@@ -234,13 +234,11 @@ def update(parent):
 	# **** MOTION LINE CHANGE ****
 	if parent.motion_line != parent.status.motion_line:
 		#print(parent.status.motion_line)
-		if 'gcode_pte' in parent.child_names:
-			if parent.motion_line != parent.last_line:
-				cursor = parent.gcode_pte.textCursor()
-				cursor = QTextCursor(parent.gcode_pte.document().findBlockByNumber(parent.motion_line))
-				cursor.movePosition(QTextCursor.MoveOperation.StartOfBlock, QTextCursor.MoveMode.MoveAnchor)
-				parent.gcode_pte.setTextCursor(cursor)
-				parent.last_line = parent.motion_line
+		if 'gcode_pte' in parent.child_names: # update the cursor position
+			cursor = parent.gcode_pte.textCursor()
+			cursor = QTextCursor(parent.gcode_pte.document().findBlockByNumber(parent.motion_line))
+			cursor.movePosition(QTextCursor.MoveOperation.StartOfBlock, QTextCursor.MoveMode.MoveAnchor)
+			parent.gcode_pte.setTextCursor(cursor)
 
 		parent.motion_line = parent.status.motion_line
 

@@ -1418,7 +1418,6 @@ def setup_plain_text_edits(parent):
 		parent.gcode_pte.ensureCursorVisible()
 		parent.gcode_pte.viewport().installEventFilter(parent)
 		parent.gcode_pte.cursorPositionChanged.connect(partial(utilities.update_qcode_pte, parent))
-		parent.last_line = parent.status.motion_line
 		parent.gcode_pte.textChanged.connect(partial(utilities.nc_code_changed, parent))
 		if 'start_line_lb' in parent.child_names:
 			parent.nc_viewer.append('gcode_pte_viewport')
