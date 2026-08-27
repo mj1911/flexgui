@@ -3,7 +3,7 @@ import os, re
 from fractions import Fraction
 
 from PyQt6.QtCore import QTimer
-from PyQt6.QtGui import QAction, QTextFormat, QColor
+from PyQt6.QtGui import QAction, QTextFormat, QColor, QPalette
 from PyQt6.QtWidgets import QApplication, QTextEdit, QFileDialog, QMenu
 
 import linuxcnc as emc
@@ -292,16 +292,23 @@ def max_velocity(parent,value):
 		parent.max_vel_lb.setText(f'{value} {parent.units}/min')
 
 def update_qcode_pte(parent):
+	if parent.gcode_pte.isReadOnly():
+		parent.gcode_pte.setStyleSheet("background-color: #E0E0E0;")
+	else:
+		parent.gcode_pte.setStyleSheet("background-color: #FFFFFF;")
+
 	extraSelections = []
-	if not parent.gcode_pte.isReadOnly():
-		selection = QTextEdit.ExtraSelection()
-		lineColor = QColor('yellow').lighter(160)
-		selection.format.setBackground(lineColor)
-		selection.format.setForeground(QColor('black'))
-		selection.format.setProperty(QTextFormat.Property.FullWidthSelection, True)
-		selection.cursor = parent.gcode_pte.textCursor()
-		selection.cursor.clearSelection()
-		extraSelections.append(selection)
+	selection = QTextEdit.ExtraSelection()
+	#line_color = QColor('yellow').lighter(160)
+	#line_color = QColor('blue').lighter(200)
+	#line_color = QColor('lightblue').lighter(160)
+	line_color = parent.palette().color(parent.palette().ColorGroup.Active, parent.palette().ColorRole.Highlight).lighter(160)
+	selection.format.setBackground(line_color)
+	selection.format.setForeground(QColor('black'))
+	selection.format.setProperty(QTextFormat.Property.FullWidthSelection, True)
+	selection.cursor = parent.gcode_pte.textCursor()
+	selection.cursor.clearSelection()
+	extraSelections.append(selection)
 	parent.gcode_pte.setExtraSelections(extraSelections)
 
 def update_start_line(parent):
@@ -677,6 +684,8 @@ def update_controls(parent):
 				getattr(parent, item).setEnabled(False)
 			for item in parent.ladder_editor_control:
 				getattr(parent, item).setEnabled(False)
+			if 'gcode_pte' in parent.child_names:
+				parent.gcode_pte.setReadOnly(True)
 
 			if state == emc.RCS_EXEC: # INTERPRETER RUNNING
 				for item in parent.run_controls:
@@ -715,9 +724,13 @@ def update_controls(parent):
 				parent.command.mode(emc.MODE_MANUAL)
 
 		elif task_mode == emc.MODE_MANUAL:
+			if 'gcode_pte' in parent.child_names:
+				parent.gcode_pte.setReadOnly(False)
+
 			if all_homed:
 				for item in parent.probe_enable:
 					getattr(parent, item).setEnabled(True)
+
 			if parent.probing:
 				for item in parent.probe_controls:
 					getattr(parent, item).setEnabled(True)
