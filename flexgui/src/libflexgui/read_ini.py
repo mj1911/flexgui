@@ -553,7 +553,7 @@ def read(parent):
 	# ***** [SPINDLE_n] Sections ***** 
 	if parent.status.spindles == 0:
 		increment = parent.inifile.find('SPINDLE_0', 'INCREMENT')
-		if increment is not None:
+		if increment is not None and not utilities.is_int(increment):
 			title = 'Configuration Error'
 			msg = (f'The INI entry SPINDLE_0 INCREMENT "{increment}" did not '
 			'evaluate to an integer value. This entry is used somehow by LinuxCNC.')
