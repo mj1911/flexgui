@@ -2517,7 +2517,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="spindle_actual_speed_lb">
+                  <widget class="QLabel" name="spindle_speed_0_lb">
                    <property name="minimumSize">
                     <size>
                      <width>65</width>
