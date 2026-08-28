@@ -29,11 +29,7 @@ from libflexgui import status
 from libflexgui import utilities
 
 class KeyboardJog(QObject):
-	# LinuxCNC keyboard jogging class
-	'''
-	how to use the shift key to jog at the rate set by self.window.max_jog_vel?
-	how to enable the shift key modifier via an ini setting?
-	'''
+	# Flex GUI keyboard jogging class
 
 	# Widget types that use arrow keys for native navigation
 	JOG_DISABLE_TYPES = (
@@ -41,27 +37,7 @@ class KeyboardJog(QObject):
 		QListView, QComboBox, QSpinBox, QDoubleSpinBox
 	)
 
-	# Key mapping scaled for 4 and 5-axis configurations
-	# Axis ID layout: 0=X, 1=Y, 2=Z, 3=A, 4=B, 5=C
-	# Map keys to (axis_id, direction)
-	KEY_JOG_MAP = {
-		Qt.Key.Key_Left: (0, 'neg'),
-		Qt.Key.Key_Right: (0, 'pos'),
-		Qt.Key.Key_Up: (1, 'pos'),
-		Qt.Key.Key_Down: (1, 'neg'),
-		Qt.Key.Key_PageUp: (2, 'pos'),
-		Qt.Key.Key_PageDown: (2, 'neg'),
-
-		# 4th Axis Extensions (Typically A-axis rotary)
-		Qt.Key.Key_Insert: (3, 'pos'),
-		Qt.Key.Key_Delete: (3, 'neg'),
-
-		# 5th Axis Extensions (Typically B or C-axis rotary)
-		Qt.Key.Key_Home: (4, 'pos'),
-		Qt.Key.Key_End: (4, 'neg'),
-	}
-
-	def __init__(self, window):
+	def __init__(self, window, axes):
 		super().__init__()
 		self.window = window
 		self._keyboard_jog_state = window.kb_jog_cb_enabled
@@ -79,6 +55,51 @@ class KeyboardJog(QObject):
 				#print("Variable is something else")
 				self.shift_max_val = False
 				self.shift_max_vel_enabled = False
+
+		# Map jog keys to (axis_id, direction)
+		self.KEY_JOG_MAP = self.generate_jog_map(axes)
+
+	def generate_jog_map(self, num_axes: int) -> dict:
+		#Generates a strict KEY_JOG_MAP based on exact axis count (1 to 5)
+		jog_map = {}
+
+		# Axis 0 (X)
+		if num_axes >= 1:
+			jog_map.update({
+				Qt.Key.Key_Left: (0, 'neg'),
+				Qt.Key.Key_Right: (0, 'pos'),
+			})
+
+		# Axis 1 (Y)
+		if num_axes >= 2:
+			jog_map.update({
+				Qt.Key.Key_Up: (1, 'pos'),
+				Qt.Key.Key_Down: (1, 'neg'),
+			})
+
+		# Axis 2 (Z)
+		if num_axes >= 3:
+			jog_map.update({
+				Qt.Key.Key_PageUp: (2, 'pos'),
+				Qt.Key.Key_PageDown: (2, 'neg'),
+			})
+
+		# Axis 3 (A)
+		if num_axes >= 4:
+			jog_map.update({
+				Qt.Key.Key_Insert: (3, 'pos'),
+				Qt.Key.Key_Delete: (3, 'neg'),
+			})
+
+		# Axis 4 (B)
+		if num_axes >= 5:
+			jog_map.update({
+				Qt.Key.Key_Home: (4, 'pos'),
+				Qt.Key.Key_End: (4, 'neg'),
+			})
+
+		return jog_map
+
 
 	def eventFilter(self, source, event):
 		event_type = event.type()
@@ -438,7 +459,8 @@ class flexgui(QMainWindow):
 		self.button_flash_timer.start(self.flash_time) # milliseconds
 
 		# install the KeyboardJog event filter
-		self.keyboard_jog = KeyboardJog(self)
+		print(f'self.axis_count {self.axis_count}')
+		self.keyboard_jog = KeyboardJog(self, self.axis_count)
 		app.installEventFilter(self.keyboard_jog)
 
 		# set the inital screen size
