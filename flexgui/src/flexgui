@@ -459,7 +459,6 @@ class flexgui(QMainWindow):
 		self.button_flash_timer.start(self.flash_time) # milliseconds
 
 		# install the KeyboardJog event filter
-		print(f'self.axis_count {self.axis_count}')
 		self.keyboard_jog = KeyboardJog(self, self.axis_count)
 		app.installEventFilter(self.keyboard_jog)
 
