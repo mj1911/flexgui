@@ -2,6 +2,8 @@
 import os
 import sys
 
+from functools import partial
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QPixmap
@@ -49,7 +51,7 @@ class tpc_calc(QWidget):
 		self.save_point_2_pb.clicked.connect(self.save_point_2)
 		self.save_point_3_pb.clicked.connect(self.save_point_3)
 		self.calculate_center_pb.clicked.connect(self.calculate_center)
-		self.move_to_center_pb.clicked.connect(self.move_to_center)
+		self.move_to_center_pb.clicked.connect(partial(self.move_to_center, parent))
 		self.set_to_x0_y0.clicked.connect(self.set_to_x0y0)
 
 		# Initialize coordinates
@@ -95,7 +97,7 @@ class tpc_calc(QWidget):
 		x1, y1 = self.x1, self.y1
 		x2, y2 = self.x2, self.y2
 		x3, y3 = self.x3, self.y3
-		
+
 		# Calculate denominator to protect against straight lines / division by zero
 		denominator = 2 * (x1 * (y2 - y3) - y1 * (x2 - x3) + x2 * y3 - x3 * y2)
 
@@ -109,7 +111,7 @@ class tpc_calc(QWidget):
 		try:
 			self.x_center = ((x1**2 + y1**2) * (y2 - y3) + (x2**2 + y2**2) * (y3 - y1) + (x3**2 + y3**2) * (y1 - y2)) / denominator
 			self.y_center = ((x1**2 + y1**2) * (x3 - x2) + (x2**2 + y2**2) * (x1 - x3) + (x3**2 + y3**2) * (x2 - x1)) / denominator
-			
+
 			# FIXED: Referencing instance variables self.x_center and self.y_center
 			self.center_x.setText(f'{self.x_center:.4f}')
 			self.center_y.setText(f'{self.y_center:.4f}')
@@ -119,7 +121,7 @@ class tpc_calc(QWidget):
 			self.center_y.setText("Calc Fail")
 			print(f"Exception Type: {type(e)}, Message: {e}")
 
-	def move_to_center(self): 
+	def move_to_center(self, parent): 
 		# FIXED: Referencing instance variables instead of local variables
 		if self.x_center is not None and self.y_center is not None:
 			print(f'move_to_center X {self.x_center:.4f} Y {self.y_center:.4f}')
