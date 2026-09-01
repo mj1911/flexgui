@@ -557,11 +557,12 @@ def update_controls(parent):
 	# parent.homed_controls = [] # enabled when power on, homed
 
 	if parent.file_changed:
+		print('here')
 		for item in parent.file_save_controls:
 			getattr(parent, item).setEnabled(True)
 		for item in parent.file_edit_controls:
 			getattr(parent, item).setEnabled(True)
-	elif not parent.file_changed or state == emc.RCS_EXEC:
+	elif not parent.file_changed or state == emc.RCS_EXEC: # FIXME this doesn't work
 		for item in parent.file_save_controls:
 			getattr(parent, item).setEnabled(False)
 		for item in parent.file_edit_controls:
@@ -659,6 +660,11 @@ def update_controls(parent):
 		if task_mode == emc.MODE_AUTO: # program running
 			for item in parent.file_open_controls:
 				getattr(parent, item).setEnabled(False)
+			for item in parent.file_save_controls:
+				getattr(parent, item).setEnabled(False)
+			for item in parent.file_edit_controls:
+				getattr(parent, item).setEnabled(False)
+
 			for item in parent.jog_controls:
 				getattr(parent, item).setEnabled(False)
 			for item in parent.tool_change_controls:
@@ -733,6 +739,11 @@ def update_controls(parent):
 					getattr(parent, item).setEnabled(False)
 				for item in parent.file_open_controls:
 					getattr(parent, item).setEnabled(False)
+				for item in parent.file_save_controls:
+					getattr(parent, item).setEnabled(False)
+				for item in parent.file_edit_controls:
+					getattr(parent, item).setEnabled(False)
+
 				for item in parent.mdi_controls:
 					getattr(parent, item).setEnabled(False)
 				for item in parent.step_controls:
@@ -796,6 +807,11 @@ def update_controls(parent):
 		elif task_mode == emc.MODE_MDI: # mdi running
 			for item in parent.file_open_controls:
 				getattr(parent, item).setEnabled(False)
+			for item in parent.file_save_controls:
+				getattr(parent, item).setEnabled(False)
+			for item in parent.file_edit_controls:
+				getattr(parent, item).setEnabled(False)
+
 			for item in parent.run_controls:
 				getattr(parent, item).setEnabled(False)
 			for item in parent.step_controls:
